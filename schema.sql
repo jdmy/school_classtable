@@ -13,9 +13,6 @@ CREATE TABLE IF NOT EXISTS classtable (
 insert into classtable(class_order,class_weekday,class_name,
 class_teacher,class_place,class_whichweek,user_id) values(1,2,
 '高数','高数老师A','教三202','单周,第一周到第15周',"S1000");
-insert into classtable(class_order,class_weekday,class_name,
-class_teacher,class_place,class_whichweek,user_id) values(1,3,
-'高数','高数老师A','教三202','单周,第一周到第15周',"S1000");
 
 use class_table;
 CREATE TABLE IF NOT EXISTS publishes (
