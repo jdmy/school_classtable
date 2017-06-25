@@ -2,14 +2,45 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
+<div><h1>{{"你好，"+session["type"]+session["name"]+"!"}}</h1></div>
+<table class="table table-hover" style="table-layout: fixed;" id="111">
+    <thead>
+        <th class="active" width="100">时间</th>
+        <th class="active" width="100">星期一</th>
+        <th class="active" width="100">星期二</th>
+        <th class="active" width="100">星期三</th>
+        <th class='active' width="100">星期四</th>
+        <th class='active' width="100">星期五</th>
+        <th class='active' width="100">星期六</th>
+        <th class='active' width="100">星期七</th>
+    </thead>
+    <tbody>
 
+        <tr>
+            <td>第1节</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+            <td>第2节</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+        <tr>
+            <td>第3节</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+        <tr>
+            <td>第4节</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+    </tbody>
+</table>
 <table class="table table-hover">
     <thead>
         <th class="active">No</th>
         <th class="active">描述</th>
         <th class="active">是否完成</th>
         <th class="active">创建时间</th>
-        <th class='active'>操作</th> 
+        <th class='active'>操作</th>
     </thead>
     <tbody>
         {% for todo in todo_list %}
@@ -25,19 +56,45 @@
                     {% if todo['status'] %}
                     <a href="{{ url_for('delete_todo_list', id=todo['id']) }}" class="btn btn-danger" role ="button">删除</a>
                     {% else %}
-                        <a href="/modify?id={{ todo['id'] }}" class="btn btn-success" role ="button">修改</a>
+                        <a href="{{ url_for('change_todo_list', id=todo['id']) }}" class="btn btn-success" role ="button">修改</a>
                     {% endif %}
                 </td>
 
             </tr>
         {% endfor %}
-
     </tbody>
 </table>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> ADD </button>
+<script>
 
+  var tableObj = document.getElementById("111");
+  var b=tableObj.tBodies[0]
+    {% for i in range(0,4) %}
+        {% for j in range(0,7) %}
+
+            {% if ctable[i][j]!="" %}
+                b.rows[parseInt({{i}})].cells[parseInt({{j+1}})].innerText="{{ ctable[i][j] }}";
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+
+
+
+
+</script>
+<!-- Button trigger modal -->
+
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> ADD TODOLIST</button>
+<br>
+{% if session['type']=="teacher" %}
+<a href="{{ url_for('publish_things')}}" class="btn btn-success" role ="button">PUBLSH</a>
+{% endif %}
+<a href="{{ url_for('add_class')}}" class="btn btn-success" role ="button">ADD CLASS</a>
+
+{% if session['type']=="admin" %}
+<a href="{{ url_for('admin_page')}}" class="btn btn-success" role ="button">ADD USER</a>
+{% endif %}
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog"> <div class="modal-content">
