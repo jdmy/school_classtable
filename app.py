@@ -8,12 +8,13 @@ import pymysql
 from flask import (Flask, render_template, g, session, redirect, url_for,
                 request, flash,abort)
 from flask_bootstrap import Bootstrap
-
+from flask_script import Manager
 from forms import TodoListForm,PublishForm,ClassForm,AdminForm,ResetPasswordForm
 
 SECRET_KEY = 'This is my key'
 
 app = Flask(__name__)
+manager=Manager(app)
 bootstrap = Bootstrap(app)
 
 app.secret_key = SECRET_KEY
@@ -292,4 +293,4 @@ def logout():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=5000, debug=True)
+	manager.run()
