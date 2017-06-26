@@ -77,7 +77,7 @@ def show_todo_list():
         sql2 = 'select id, user_id, title, status, create_time from todolist where user_id="{0}"'.format(session["id"])
         with g.db as cur:
             cur.execute(sql2)
-            todo_list = [dict(id=row[0], user_id=row[1], title=row[2], status=bool(row[3]), create_time=row[4]) for row
+            todo_list = [dict(id=row[0], user_id=row[1], title=row[2], status=bool(row[3]), create_time=time.asctime( time.localtime(int(row[4])) )) for row
                          in cur.fetchall()]
         return render_template('index.html', ctable=ctable, form=form,todo_list=todo_list)
     else:
@@ -114,7 +114,14 @@ def add_class():
 def admin_page():
     form=AdminForm()
     if request.method == 'GET':
-        return render_template('modify.html',form=form)
+        with g.db as cur:
+            sql = """select user_id,user_name,user_type,id from usertable
+        """
+            cur.execute(sql)
+            user_list = [dict(user_id=row[0],user_name=row[1],user_type=row[2],id=row[3]) for row in
+                     cur.fetchall()]
+
+        return render_template('modify.html',form=form,user_list=user_list)
     else:
 
         if form.validate_on_submit():
@@ -127,6 +134,19 @@ def admin_page():
         else:
             flash(form.errors)
         return redirect(url_for('admin_page'))
+
+@app.route('/delete_user/<int:id>')
+def delete_user(id):
+    # id = request.args.get('id', None)
+    if id is None:
+        abort(404)
+    else:
+        sql = "delete from usertable where id = {0}".format(id)
+        with g.db as cur:
+            cur.execute(sql)
+        flash('You have delete a user')
+        return redirect(url_for('admin_page'))
+
 
 @app.route('/resetpassword', methods=['GET', 'POST'])
 def resetpassword():
@@ -151,7 +171,7 @@ def resetpassword():
                 """.format(form.user_newpassword.data, form.user_id.data)
                     cur.execute(sql)
 
-            flash('You have add a user!')
+            flash('You have resetpassword!')
         else:
             flash(form.errors)
         return redirect(url_for('show_todo_list'))
@@ -159,7 +179,14 @@ def resetpassword():
 def publish_things():
     form = PublishForm()
     if request.method == 'GET':
-        return render_template('modify.html',form=form)
+        with g.db as cur:
+            sql = """select title,class_name,id from publishes
+        """
+            cur.execute(sql)
+            publish_list = [dict(title=row[0],class_name=row[1],id=row[2]) for row in
+                     cur.fetchall()]
+
+        return render_template('modify.html',form=form,publish_list=publish_list)
     else:
         if form.validate_on_submit():
             with g.db as cur:
@@ -169,7 +196,19 @@ def publish_things():
             flash('You have modify a publish')
         else:
             flash(form.errors)
-        return redirect(url_for('show_todo_list'))
+        return redirect(url_for('publish_things'))
+
+@app.route('/delete_publish/<int:id>')
+def delete_publish(id):
+    # id = request.args.get('id', None)
+    if id is None:
+        abort(404)
+    else:
+        sql = "delete from publishes where id = {0}".format(id)
+        with g.db as cur:
+            cur.execute(sql)
+        flash('You have delete a publish')
+        return redirect(url_for('publish_things'))
 
 @app.route('/change/<id>', methods=['GET', 'POST'])
 def change_todo_list(id):

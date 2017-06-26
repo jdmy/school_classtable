@@ -7,5 +7,54 @@
     <h4 class="modal-title" id="myModalLabel" align="center"></h4>
     <div class="col-md-8 col-md-offset-2"> {{ wtf.quick_form(form, form_type="horizontal") }} </div>
 </div>
+{% if session['type']=="admin" %}
+<table class="table table-hover">
+    <thead>
+        <th class="active">No</th>
+        <th class="active">id</th>
+        <th class="active">user_id</th>
+        <th class="active">user_name</th>
+        <th class="active">user_type</th>
+    </thead>
+    <tbody>
+        {% for user in user_list %}
+                <tr class="success">
+                <td>{{ loop.index }}</td>
+                <td>{{ user['id'] }}</td>
+                <td>{{ user['user_id'] }}</td>
+                <td>{{ user['user_name'] }}</td>
+                <td>{{ user['user_type'] }}</td>
+                <td>
+                    <a href="{{ url_for('delete_user', id=user['id']) }}" class="btn btn-danger" role ="button">删除</a>
+                </td>
 
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% if session['type']=="teacher" %}
+<table class="table table-hover">
+    <thead>
+        <th class="active">No</th>
+        <th class="active">id</th>
+        <th class="active">title</th>
+        <th class="active">class_name</th>
+    </thead>
+    <tbody>
+        {% for publish in publish_list %}
+                <tr class="success">
+                <td>{{ loop.index }}</td>
+                <td>{{ publish['id'] }}</td>
+                <td>{{ publish['title'] }}</td>
+                <td>{{ publish['class_name'] }}</td>
+                <td>
+                    <a href="{{ url_for('delete_publish', id=publish['id']) }}" class="btn btn-danger" role ="button">删除</a>
+                </td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock %}
