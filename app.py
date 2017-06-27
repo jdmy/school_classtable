@@ -53,12 +53,22 @@ def show_todo_list():
     form = TodoListForm()
     if request.method == 'GET':
         if(session["type"]=="student"):
+            publishes=[]
             with g.db as cur:
                 sql3 = "select title,class_name from publishes"
-            cur.execute(sql3)
-            publishes = [dict(title=row[0],class_name=row[1]) for row in cur.fetchall()]
+                cur.execute(sql3)
+                publishes = [dict(title=row[0],class_name=row[1]) for row in cur.fetchall()]
+
+
             for publish in publishes:
-                flash(publish["class_name"]+"的课程通知:"+publish["title"])
+                with g.db as cur:
+                    sql4 = "select distinct user_id,class_name from classtable where class_name='{0}'".format(
+                        publish["class_name"])
+                    cur.execute(sql4)
+                    students = [dict(user_id=row[0], class_name=row[1]) for row in cur.fetchall()]
+                    for student in students:
+                        if student["class_name"]==publish["class_name"]:
+                            flash(publish["class_name"]+"的课程通知:"+publish["title"])
 
 
 
@@ -74,7 +84,7 @@ def show_todo_list():
                 for j in range(7):
                     ctable[i].append("")
             for c in classtable:
-                ctable[c["class_order"]-1][c["class_weekday"]-1]=c["class_name"]+"|"+c["class_teacher"]+"|"+c["class_place"]+"|"+c["class_whichweek"]
+                ctable[c["class_order"]-1][c["class_weekday"]-1]+=c["class_name"]+"|"+c["class_teacher"]+"|"+c["class_place"]+"|"+c["class_whichweek"]+"                                               "
         sql2 = 'select id, user_id, title, status, create_time from todolist where user_id="{0}"'.format(session["id"])
         with g.db as cur:
             cur.execute(sql2)
