@@ -2,7 +2,7 @@
 #-*- coding: UTF-8 -*-
 from __future__ import unicode_literals
 from flask_wtf import FlaskForm
-from wtforms import RadioField, SubmitField, StringField,IntegerField,PasswordField
+from wtforms import RadioField, SubmitField, StringField,IntegerField,PasswordField,SelectField
 from wtforms.validators import DataRequired, Length,NumberRange
 
 class TodoListForm(FlaskForm):
@@ -18,6 +18,16 @@ class ClassForm(FlaskForm):
     class_teacher = StringField('老师', validators=[DataRequired(),  Length(1,64)])
     class_place = StringField('地点', validators=[DataRequired(),  Length(1,64)])
     class_whichweek = StringField('在哪几周上课', validators=[DataRequired(),Length(1,64) ])
+    class_order = IntegerField('第几节',validators=[DataRequired(),NumberRange(1,4)])
+    class_weekday = IntegerField('星期几',validators=[DataRequired(),NumberRange(1,7)])
+    submit = SubmitField('添加')
+class NewClassForm(FlaskForm):
+    class_name = StringField('课程', validators=[DataRequired(),  Length(1,64)])
+    class_teacher = StringField('老师', validators=[DataRequired(),  Length(1,64)])
+    class_place = StringField('地点', validators=[DataRequired(),  Length(1,64)])
+    class_weekbeg=IntegerField('第几周开始',validators=[DataRequired(),NumberRange(1,20)])
+    class_weekend = IntegerField('第几周结束', validators=[DataRequired(), NumberRange(1, 20)])
+    class_weekparity=SelectField("单双周",choices=[('0','单周'), ('1',"双周"),('2',"全周")])
     class_order = IntegerField('第几节',validators=[DataRequired(),NumberRange(1,4)])
     class_weekday = IntegerField('星期几',validators=[DataRequired(),NumberRange(1,7)])
     submit = SubmitField('添加')
